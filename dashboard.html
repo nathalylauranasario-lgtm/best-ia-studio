@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Best IA Academy — Studio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --pink: #e91e8c;
+      --pink-dim: #e91e8c18;
+      --pink-border: #e91e8c55;
+      --pink-border-hover: #e91e8caa;
+      --bg: #0a0a0a;
+      --surface: #111;
+      --surface2: #161616;
+      --border: #1e1e1e;
+      --text: #f0f0f0;
+      --muted: #666;
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+    /* TOPBAR */
+    .topbar { display: flex; align-items: center; padding: 0 20px; height: 58px; background: var(--surface); border-bottom: 1.5px solid var(--pink-border); flex-shrink: 0; gap: 0; position: relative; z-index: 100; }
+    .logo { display: flex; align-items: center; gap: 8px; margin-right: 28px; flex-shrink: 0; text-decoration: none; }
+    .logo-hex { width: 30px; height: 30px; background: var(--pink-dim); border: 1.5px solid var(--pink-border); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+    .logo-text { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: #fff; }
+    .logo-text span { color: var(--pink); }
+
+    .nav { display: flex; align-items: center; gap: 2px; flex: 1; }
+    .nmenu { position: relative; }
+    .nmenu-btn { display: flex; align-items: center; gap: 5px; padding: 8px 14px; border-radius: 8px; font-size: 13px; cursor: pointer; color: #888; transition: all 0.15s; background: none; border: 1.5px solid transparent; height: 40px; font-family: 'DM Sans', sans-serif; }
+    .nmenu-btn:hover { color: #fff; background: #1a1a1a; border-color: var(--pink-border); }
+    .nmenu-btn.active { color: var(--pink); background: var(--pink-dim); border-color: var(--pink-border); }
+    .nmenu-btn svg { width: 10px; height: 10px; fill: currentColor; transition: transform 0.15s; }
+    .nmenu.open .nmenu-btn svg { transform: rotate(180deg); }
+    .ntab { padding: 8px 14px; border-radius: 8px; font-size: 13px; cursor: pointer; color: #888; transition: all 0.15s; background: none; border: 1.5px solid transparent; height: 40px; font-family: 'DM Sans', sans-serif; }
+    .ntab:hover { color: #fff; background: #1a1a1a; border-color: var(--pink-border); }
+    .ntab.active { color: var(--pink); background: var(--pink-dim); border-color: var(--pink-border); }
+
+    .dropdown { position: absolute; top: calc(100% + 6px); left: 0; background: #161616; border: 1.5px solid var(--pink-border); border-radius: 10px; min-width: 190px; overflow: hidden; display: none; z-index: 200; box-shadow: 0 0 20px #e91e8c1a; }
+    .nmenu.open .dropdown { display: block; }
+    .dd-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; font-size: 12px; color: #888; cursor: pointer; transition: all 0.15s; border-left: 2px solid transparent; font-family: 'DM Sans', sans-serif; }
+    .dd-item:hover { background: var(--pink-dim); color: var(--pink); border-left-color: var(--pink); }
+    .dd-icon { width: 20px; height: 20px; border-radius: 5px; background: var(--pink-dim); display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
+    .dd-sep { height: 0.5px; background: #222; margin: 3px 0; }
+
+    .topbar-right { display: flex; align-items: center; gap: 10px; margin-left: 16px; }
+    .plan-badge { font-size: 10px; background: var(--pink-dim); color: var(--pink); padding: 3px 10px; border-radius: 20px; font-weight: 500; border: 1px solid var(--pink-border); }
+    .user-av { width: 30px; height: 30px; border-radius: 50%; background: var(--pink-dim); border: 1.5px solid var(--pink-border); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; color: var(--pink); cursor: pointer; font-family: 'Syne', sans-serif; }
+
+    /* CONTENT */
+    .content { flex: 1; overflow: hidden; }
+    .screen { display: none; height: 100%; overflow-y: auto; }
+    .screen.active { display: block; }
+
+    /* HOME */
+    .banner { background: linear-gradient(100deg, #1e0a14, #0d0d1e); padding: 24px 28px; border-bottom: 1.5px solid #e91e8c33; position: relative; overflow: hidden; }
+    .banner::after { content: ''; position: absolute; right: 0; top: 0; width: 300px; height: 100%; background: radial-gradient(ellipse at right, #e91e8c0d, transparent); pointer-events: none; }
+    .banner-tag { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; background: var(--pink-dim); color: var(--pink); padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; font-weight: 500; border: 1px solid var(--pink-border); }
+    .banner-title { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 6px; letter-spacing: -0.4px; }
+    .banner-title span { color: var(--pink); }
+    .banner-sub { font-size: 13px; color: #777; line-height: 1.5; }
+    .banner-close { position: absolute; top: 16px; right: 20px; color: #444; cursor: pointer; font-size: 16px; background: none; border: none; }
+
+    .projects-area { padding: 20px 28px; }
+    .section-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .section-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 500; color: #888; }
+    .view-all { font-size: 12px; color: var(--pink); cursor: pointer; }
+    .proj-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .proj-card { border-radius: 12px; overflow: hidden; cursor: pointer; border: 1px solid #2a2a2a; transition: border-color 0.2s, box-shadow 0.2s; background: #141414; }
+    .proj-card:hover { border-color: var(--pink); box-shadow: 0 0 14px #e91e8c22; }
+    .proj-thumb { aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; font-size: 30px; }
+    .pt1 { background: linear-gradient(135deg, #1e0a14, #2d0f1e); }
+    .pt2 { background: linear-gradient(135deg, #0a0d1e, #0d1a2e); }
+    .pt3 { background: linear-gradient(135deg, #1e1a0a, #2d260d); }
+    .pt4 { background: linear-gradient(135deg, #0a1e0a, #0d2d14); }
+    .pt5 { background: linear-gradient(135deg, #1e0a1e, #2d0d2d); }
+    .proj-info { padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; }
+    .proj-name { font-size: 12px; font-weight: 500; color: #ccc; }
+    .proj-date { font-size: 10px; color: #555; margin-top: 2px; }
+    .proj-count { font-size: 9px; background: var(--pink-dim); color: var(--pink); padding: 2px 8px; border-radius: 10px; border: 1px solid var(--pink-border); white-space: nowrap; }
+    .new-proj { border-radius: 12px; cursor: pointer; border: 1.5px dashed #333; transition: border-color 0.2s, box-shadow 0.2s; background: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-height: 130px; }
+    .new-proj:hover { border-color: var(--pink); box-shadow: 0 0 14px #e91e8c22; }
+    .np-icon { font-size: 24px; color: #444; }
+    .np-label { font-size: 12px; color: #444; }
+
+    /* GERAR */
+    .gen-page { display: flex; flex-direction: column; height: 100%; }
+    .gen-gallery { flex: 1; overflow-y: auto; padding: 16px 20px; }
+    .gen-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+    .gen-item { border-radius: 8px; overflow: hidden; cursor: pointer; aspect-ratio: 3/4; display: flex; align-items: center; justify-content: center; font-size: 24px; position: relative; border: 1px solid #1e1e1e; transition: border-color 0.2s, box-shadow 0.2s; }
+    .gen-item:hover { border-color: var(--pink); box-shadow: 0 0 10px #e91e8c22; }
+    .gi1{background:linear-gradient(160deg,#1e0a14,#2d0f24);}
+    .gi2{background:linear-gradient(160deg,#0a1e0a,#142d18);}
+    .gi3{background:linear-gradient(160deg,#1e0a0a,#2d1010);}
+    .gi4{background:linear-gradient(160deg,#0a0a1e,#101030);}
+    .gi5{background:linear-gradient(160deg,#1e1e0a,#2a2a10);}
+    .gi6{background:linear-gradient(160deg,#0a1e1e,#102828);}
+    .gi7{background:linear-gradient(160deg,#1e0a1e,#2a1028);}
+    .gi8{background:linear-gradient(160deg,#1a1a1a,#222);}
+    .gi9{background:linear-gradient(160deg,#0a1020,#141a2e);}
+    .gi10{background:linear-gradient(160deg,#1a1a0a,#282810);}
+    .gen-label { position: absolute; bottom: 5px; left: 5px; right: 5px; font-size: 8px; color: #bbb; background: rgba(0,0,0,0.65); padding: 2px 5px; border-radius: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .float-panel { flex-shrink: 0; background: #141414; border-top: 1.5px solid var(--pink-border); padding: 12px 16px; }
+    .panel-tabs { display: flex; gap: 4px; margin-bottom: 10px; }
+    .ptab { padding: 4px 14px; border-radius: 20px; font-size: 11px; cursor: pointer; color: #555; background: none; border: 1px solid #2a2a2a; transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
+    .ptab:hover { border-color: var(--pink-border); color: #ccc; }
+    .ptab.active { background: var(--pink-dim); color: var(--pink); border-color: var(--pink-border); }
+    .prompt-input { width: 100%; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 8px; padding: 9px 12px; font-size: 12px; color: var(--text); resize: none; font-family: 'DM Sans', sans-serif; line-height: 1.4; transition: border-color 0.15s; margin-bottom: 8px; }
+    .prompt-input:focus { outline: none; border-color: var(--pink-border); box-shadow: 0 0 8px #e91e8c18; }
+    .prompt-input::placeholder { color: #444; }
+    .panel-controls { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .model-sel, .sw-sel { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 6px; padding: 5px 10px; font-size: 11px; color: #888; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: border-color 0.15s; }
+    .model-sel:hover, .sw-sel:hover { border-color: var(--pink-border); }
+    .ratio-btn { padding: 4px 10px; border-radius: 6px; font-size: 11px; border: 1px solid #2a2a2a; background: none; color: #555; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
+    .ratio-btn:hover { border-color: var(--pink-border); color: #ccc; }
+    .ratio-btn.active { background: var(--pink-dim); color: var(--pink); border-color: var(--pink-border); }
+    .gen-btn, .sw-gen-btn { padding: 8px 22px; background: var(--pink); color: #fff; border: none; border-radius: 8px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.15s, box-shadow 0.15s; }
+    .gen-btn { margin-left: auto; }
+    .gen-btn:hover, .sw-gen-btn:hover { background: #c4186e; box-shadow: 0 0 16px #e91e8c55; }
+    .credits-txt { font-size: 10px; color: #444; }
+
+    /* SWAP / MOTION */
+    .swap-page { display: flex; flex-direction: column; height: 100%; }
+    .swap-gallery { flex: 1; overflow-y: auto; padding: 16px 20px; }
+    .swap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .swap-item { border-radius: 8px; overflow: hidden; cursor: pointer; position: relative; border: 1px solid #1e1e1e; transition: border-color 0.2s, box-shadow 0.2s; }
+    .swap-item:hover { border-color: var(--pink); box-shadow: 0 0 10px #e91e8c22; }
+    .swap-pair { display: flex; gap: 3px; aspect-ratio: 2/1; }
+    .swap-half { flex: 1; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+    .sh-base { background: #111; }
+    .sh-result { background: linear-gradient(135deg, #1e0a14, #0a0a1e); }
+    .swap-lbl { position: absolute; bottom: 4px; left: 4px; right: 4px; font-size: 9px; color: #888; background: rgba(0,0,0,0.6); padding: 2px 6px; border-radius: 3px; }
+
+    .swap-panel { flex-shrink: 0; background: #141414; border-top: 1.5px solid var(--pink-border); padding: 12px 16px; }
+    .swap-inputs { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .sw-slot { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .sw-box { width: 64px; height: 64px; border-radius: 8px; border: 1.5px dashed #333; background: #0f0f0f; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; gap: 3px; transition: border-color 0.2s, box-shadow 0.2s; }
+    .sw-box:hover { border-color: var(--pink); box-shadow: 0 0 10px #e91e8c22; }
+    .sw-box-icon { font-size: 22px; }
+    .sw-lbl { font-size: 9px; color: #555; text-align: center; }
+    .sw-plus { font-size: 18px; color: #2a2a2a; }
+    .sw-arrow { font-size: 18px; color: var(--pink-border); margin: 0 4px; }
+    .sw-result { width: 64px; height: 64px; border-radius: 8px; background: linear-gradient(135deg, #1e0a14, #0a0a1e); border: 1.5px solid var(--pink-border); box-shadow: 0 0 10px #e91e8c22; display: flex; align-items: center; justify-content: center; font-size: 26px; }
+    .sw-result-col { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .sw-controls { display: flex; align-items: center; gap: 8px; flex: 1; justify-content: flex-end; flex-wrap: wrap; }
+
+    /* ANALISE */
+    .analise-page { display: flex; flex-direction: column; height: 100%; }
+    .analise-body { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 16px 20px; min-height: 0; }
+    .upload-zone { background: #0f0f0f; border: 1.5px dashed #333; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s; }
+    .upload-zone:hover { border-color: var(--pink); box-shadow: 0 0 14px #e91e8c1a; }
+    .json-panel { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px; font-family: monospace; font-size: 11px; color: #ccc; line-height: 1.7; overflow-y: auto; }
+    .jk { color: var(--pink); } .js { color: #6ee7b7; } .jn { color: #fbbf24; }
+    .analise-footer { padding: 12px 20px; background: #141414; border-top: 1.5px solid var(--pink-border); flex-shrink: 0; }
+    .psug-label { font-size: 10px; font-weight: 500; color: var(--pink); margin-bottom: 5px; }
+    .prompt-sug { background: var(--pink-dim); border: 1px solid var(--pink-border); border-radius: 8px; padding: 9px 12px; font-size: 12px; color: #f9a8d4; line-height: 1.5; }
+
+    /* CHAT */
+    .chat-page { display: flex; flex-direction: column; height: 100%; }
+    .chat-hdr { padding: 14px 20px; background: #141414; border-bottom: 1.5px solid #e91e8c33; flex-shrink: 0; }
+    .chat-msgs { flex: 1; overflow-y: auto; padding: 16px 20px; display: flex; flex-direction: column; gap: 14px; }
+    .msg-ai { display: flex; gap: 10px; }
+    .msg-user { display: flex; justify-content: flex-end; }
+    .ai-av { width: 28px; height: 28px; border-radius: 50%; background: var(--pink-dim); border: 1.5px solid var(--pink-border); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--pink); flex-shrink: 0; font-weight: 500; margin-top: 2px; font-family: 'Syne', sans-serif; }
+    .bubble { max-width: 75%; padding: 10px 14px; border-radius: 10px; font-size: 13px; line-height: 1.5; }
+    .bubble-ai { background: #1a1a1a; color: #ccc; border-bottom-left-radius: 3px; border: 0.5px solid #2a2a2a; }
+    .bubble-user { background: var(--pink-dim); color: #f9a8d4; border-bottom-right-radius: 3px; border: 1px solid var(--pink-border); }
+    .result-box { background: #0f0f0f; border: 1px solid var(--pink-border); border-radius: 8px; padding: 10px 12px; font-size: 11px; color: var(--pink); line-height: 1.5; margin-top: 6px; font-family: monospace; }
+    .chat-input-area { padding: 12px 16px; background: #141414; border-top: 1.5px solid var(--pink-border); flex-shrink: 0; }
+    .chat-row { display: flex; gap: 8px; }
+    .chat-inp { flex: 1; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 8px; padding: 9px 12px; font-size: 12px; color: var(--text); font-family: 'DM Sans', sans-serif; transition: border-color 0.15s; }
+    .chat-inp:focus { outline: none; border-color: var(--pink-border); box-shadow: 0 0 8px #e91e8c18; }
+    .chat-inp::placeholder { color: #444; }
+    .chat-send { padding: 9px 18px; background: var(--pink); color: #fff; border: none; border-radius: 8px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.15s, box-shadow 0.15s; }
+    .chat-send:hover { background: #c4186e; box-shadow: 0 0 16px #e91e8c55; }
+    .chat-hint { font-size: 11px; color: #444; margin-top: 6px; }
+
+    /* PROMPTS */
+    .prompts-page { padding: 16px 20px; overflow-y: auto; height: 100%; }
+    .pfilters { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+    .pfil { padding: 5px 14px; border-radius: 20px; font-size: 11px; border: 1px solid #2a2a2a; cursor: pointer; color: #555; background: none; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
+    .pfil:hover { border-color: var(--pink-border); color: #ccc; }
+    .pfil.active { background: var(--pink-dim); color: var(--pink); border-color: var(--pink-border); }
+    .pgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .pcard { background: #141414; border: 1px solid #222; border-radius: 10px; padding: 14px; cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s; }
+    .pcard:hover { border-color: var(--pink); box-shadow: 0 0 10px #e91e8c18; }
+    .ptag { display: inline-block; font-size: 9px; padding: 2px 8px; border-radius: 20px; background: var(--pink-dim); color: var(--pink); margin-bottom: 7px; font-weight: 500; border: 1px solid var(--pink-border); }
+    .ptitle { font-size: 12px; font-weight: 500; color: #ddd; margin-bottom: 4px; }
+    .pdesc { font-size: 11px; color: #555; line-height: 1.4; margin-bottom: 10px; }
+    .pcopy { font-size: 11px; color: var(--pink); border: 1px solid var(--pink-border); background: none; padding: 4px 12px; border-radius: 20px; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
+    .pcopy:hover { background: var(--pink-dim); box-shadow: 0 0 8px #e91e8c22; }
+
+    /* AULAS */
+    .aulas-page { padding: 16px 20px; overflow-y: auto; height: 100%; }
+    .agrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .acard { background: #141414; border: 1px solid #222; border-radius: 10px; overflow: hidden; cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s; }
+    .acard:hover { border-color: var(--pink); box-shadow: 0 0 10px #e91e8c18; }
+    .acard-thumb { height: 80px; display: flex; align-items: center; justify-content: center; font-size: 26px; }
+    .acard-body { padding: 10px 14px; }
+    .alevel { font-size: 10px; font-weight: 500; margin-bottom: 3px; }
+    .atitle { font-size: 12px; font-weight: 500; color: #ddd; margin-bottom: 3px; }
+    .ameta { font-size: 11px; color: #555; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <a class="logo" href="index.html">
+      <div class="logo-hex">🧠</div>
+      <div class="logo-text">BEST <span>IA</span> Academy</div>
+    </a>
+    <div class="nav">
+      <button class="ntab active" onclick="nav('home',this)">Projetos</button>
+      <div class="nmenu" id="m-criar">
+        <button class="nmenu-btn" onclick="toggleMenu('m-criar')">Criar <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg></button>
+        <div class="dropdown">
+          <div class="dd-item" onclick="nav('gerar');closeMenus()"><div class="dd-icon">◆</div>Gerar imagem</div>
+          <div class="dd-item" onclick="nav('faceswap');closeMenus()"><div class="dd-icon">◑</div>Face Swap</div>
+          <div class="dd-item" onclick="nav('motion');closeMenus()"><div class="dd-icon">▷</div>Control Motion</div>
+          <div class="dd-sep"></div>
+          <div class="dd-item" onclick="nav('analise');closeMenus()"><div class="dd-icon">◉</div>Analisar imagem</div>
+        </div>
+      </div>
+      <div class="nmenu" id="m-prompts">
+        <button class="nmenu-btn" onclick="toggleMenu('m-prompts')">Prompts <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg></button>
+        <div class="dropdown">
+          <div class="dd-item" onclick="nav('ia-chat');closeMenus()"><div class="dd-icon">◎</div>IA de prompts</div>
+          <div class="dd-item" onclick="nav('prompts-lib');closeMenus()"><div class="dd-icon">◈</div>Biblioteca de prompts</div>
+        </div>
+      </div>
+      <div class="nmenu" id="m-aprender">
+        <button class="nmenu-btn" onclick="toggleMenu('m-aprender')">Aprender <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg></button>
+        <div class="dropdown">
+          <div class="dd-item" onclick="nav('aulas');closeMenus()"><div class="dd-icon">▶</div>Aulas e tutoriais</div>
+        </div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="plan-badge">PRO</div>
+      <div class="user-av">JA</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- HOME -->
+    <div class="screen active" id="s-home">
+      <div class="banner">
+        <button class="banner-close" onclick="this.closest('.banner').style.display='none'">✕</button>
+        <div class="banner-tag">✦ Novidade</div>
+        <div class="banner-title">Nano Banana 2 <span>chegou!</span></div>
+        <div class="banner-sub">Geração de imagens com múltiplas referências, estilização avançada e edição inteligente.</div>
+      </div>
+      <div class="projects-area">
+        <div class="section-hdr"><div class="section-title">Meus projetos</div><div class="view-all">Ver todos</div></div>
+        <div class="proj-grid">
+          <div class="proj-card"><div class="proj-thumb pt1">🧴</div><div class="proj-info"><div><div class="proj-name">Avatar UGC skincare</div><div class="proj-date">Mar 16 — 14:22</div></div><div class="proj-count">12 imgs</div></div></div>
+          <div class="proj-card"><div class="proj-thumb pt2">👗</div><div class="proj-info"><div><div class="proj-name">Lookbook outono</div><div class="proj-date">Mar 15 — 09:46</div></div><div class="proj-count">8 imgs</div></div></div>
+          <div class="proj-card"><div class="proj-thumb pt3">🎬</div><div class="proj-info"><div><div class="proj-name">Vídeos reels março</div><div class="proj-date">Mar 12 — 13:22</div></div><div class="proj-count">5 vids</div></div></div>
+          <div class="proj-card"><div class="proj-thumb pt4">🤳</div><div class="proj-info"><div><div class="proj-name">Stories produto X</div><div class="proj-date">Mar 10 — 11:05</div></div><div class="proj-count">6 imgs</div></div></div>
+          <div class="proj-card"><div class="proj-thumb pt5">✨</div><div class="proj-info"><div><div class="proj-name">Lookalike campanha</div><div class="proj-date">Mar 08 — 16:40</div></div><div class="proj-count">9 imgs</div></div></div>
+          <div class="new-proj" onclick="alert('Em breve: criar novo projeto!')"><div class="np-icon">+</div><div class="np-label">Novo projeto</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GERAR -->
+    <div class="screen" id="s-gerar">
+      <div class="gen-page">
+        <div class="gen-gallery">
+          <div class="gen-grid">
+            <div class="gen-item gi1">🧴<div class="gen-label">UGC skincare</div></div>
+            <div class="gen-item gi2">👗<div class="gen-label">Outfit editorial</div></div>
+            <div class="gen-item gi3">🤳<div class="gen-label">Selfie story</div></div>
+            <div class="gen-item gi4">💄<div class="gen-label">Retrato editorial</div></div>
+            <div class="gen-item gi5">🌅<div class="gen-label">Avatar praia</div></div>
+            <div class="gen-item gi6">📦<div class="gen-label">Unboxing natural</div></div>
+            <div class="gen-item gi7">🪞<div class="gen-label">Provador virtual</div></div>
+            <div class="gen-item gi8">🌿<div class="gen-label">Lifestyle outdoor</div></div>
+            <div class="gen-item gi9">✨<div class="gen-label">Pele ultra-realista</div></div>
+            <div class="gen-item gi10">📸<div class="gen-label">Retrato masculino</div></div>
+          </div>
+        </div>
+        <div class="float-panel">
+          <div class="panel-tabs">
+            <div class="ptab active">Texto → Imagem</div>
+            <div class="ptab">Imagem → Imagem</div>
+            <div class="ptab">Com referência</div>
+          </div>
+          <textarea class="prompt-input" rows="2" placeholder="Descreva a imagem que quer criar..."></textarea>
+          <div class="panel-controls">
+            <select class="model-sel"><option>Nano Banana 2</option><option>Flux 1.1 Pro</option><option>SDXL Lightning</option><option>DALL-E 3</option></select>
+            <div class="ratio-btn active">1:1</div><div class="ratio-btn">9:16</div><div class="ratio-btn">4:5</div><div class="ratio-btn">16:9</div>
+            <button class="gen-btn">Gerar imagem</button>
+            <div class="credits-txt">12 créditos</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FACE SWAP -->
+    <div class="screen" id="s-faceswap">
+      <div class="swap-page">
+        <div class="swap-gallery">
+          <div class="swap-grid">
+            <div class="swap-item"><div class="swap-pair"><div class="swap-half sh-base">🖼</div><div class="swap-half sh-result">✨</div></div><div class="swap-lbl">Face swap — avatar 1</div></div>
+            <div class="swap-item"><div class="swap-pair"><div class="swap-half sh-base">🧑</div><div class="swap-half sh-result">🌟</div></div><div class="swap-lbl">Face swap — outfit</div></div>
+            <div class="swap-item"><div class="swap-pair"><div class="swap-half sh-base">👩</div><div class="swap-half sh-result">💫</div></div><div class="swap-lbl">Face swap — editorial</div></div>
+            <div class="swap-item"><div class="swap-pair"><div class="swap-half sh-base">🙍</div><div class="swap-half sh-result">⭐</div></div><div class="swap-lbl">Face swap — promo</div></div>
+            <div class="swap-item"><div class="swap-pair"><div class="swap-half sh-base">🖼</div><div class="swap-half sh-result">✨</div></div><div class="swap-lbl">Face swap — look</div></div>
+            <div class="swap-item"><div class="swap-pair"><div class="swap-half sh-base">👤</div><div class="swap-half sh-result">🌟</div></div><div class="swap-lbl">Face swap — story</div></div>
+          </div>
+        </div>
+        <div class="swap-panel">
+          <div class="swap-inputs">
+            <div class="sw-slot"><div class="sw-box"><div class="sw-box-icon">🖼</div><div style="font-size:8px;color:#444;">upload</div></div><div class="sw-lbl">Imagem base</div></div>
+            <div class="sw-plus">+</div>
+            <div class="sw-slot"><div class="sw-box"><div class="sw-box-icon">👤</div><div style="font-size:8px;color:#444;">upload</div></div><div class="sw-lbl">Seu avatar</div></div>
+            <div class="sw-arrow">→</div>
+            <div class="sw-result-col"><div class="sw-result">✨</div><div class="sw-lbl">Resultado</div></div>
+            <div class="sw-controls">
+              <select class="sw-sel"><option>Alta qualidade</option><option>Rápido</option></select>
+              <select class="sw-sel"><option>1 rosto</option><option>Múltiplos</option></select>
+              <button class="sw-gen-btn">Gerar Face Swap</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTROL MOTION -->
+    <div class="screen" id="s-motion">
+      <div class="swap-page">
+        <div class="swap-gallery">
+          <div class="swap-grid">
+            <div class="swap-item"><div class="swap-pair"><div class="swap-half sh-base" style="background:#0a0d1e;">🌅</div><div class="swap-half sh-result">🎬</div></div><div class="swap-lbl">Câmera lenta — praia</div></div>
+            <div class="swap-item"><div class="swap-pair"><div class="swap-half sh-base" style="background:#1a0a0a;">📸</div><div class="swap-half sh-result">🎥</div></div><div class="swap-lbl">Zoom dramático</div></div>
+            <div class="swap-item"><div class="swap-pair"><div class="swap-half sh-base" style="background:#0a1a0a;">🏙</div><div class="swap-half sh-result">▶</div></div><div class="swap-lbl">Dolly in — urban</div></div>
+            <div class="swap-item"><div class="swap-pair"><div class="swap-half sh-base" style="background:#1a1a0a;">🌿</div><div class="swap-half sh-result">🌟</div></div><div class="swap-lbl">Parallax lateral</div></div>
+            <div class="swap-item"><div class="swap-pair"><div class="swap-half sh-base" style="background:#0a0a1a;">💄</div><div class="swap-half sh-result">✨</div></div><div class="swap-lbl">Close editorial</div></div>
+            <div class="swap-item"><div class="swap-pair"><div class="swap-half sh-base" style="background:#1a0a1a;">👗</div><div class="swap-half sh-result">🎞</div></div><div class="swap-lbl">Reveal cinematic</div></div>
+          </div>
+        </div>
+        <div class="swap-panel">
+          <div class="panel-tabs" style="margin-bottom:8px;">
+            <div class="ptab active">Kling</div><div class="ptab">RunwayML</div><div class="ptab">Luma Dream</div>
+          </div>
+          <div class="swap-inputs">
+            <div class="sw-slot"><div class="sw-box"><div class="sw-box-icon">🖼</div><div style="font-size:8px;color:#444;">upload</div></div><div class="sw-lbl">Imagem base</div></div>
+            <div class="sw-plus">+</div>
+            <div class="sw-slot"><div class="sw-box" style="width:110px;padding:6px 8px;align-items:flex-start;height:64px;"><textarea style="background:none;border:none;font-size:9px;color:#888;resize:none;width:100%;height:100%;font-family:'DM Sans',sans-serif;" placeholder="Descreva o movimento..."></textarea></div><div class="sw-lbl">Prompt de movimento</div></div>
+            <div class="sw-arrow">→</div>
+            <div class="sw-result-col"><div class="sw-result">🎬</div><div class="sw-lbl">Vídeo gerado</div></div>
+            <div class="sw-controls">
+              <select class="sw-sel"><option>5s</option><option>10s</option></select>
+              <select class="sw-sel"><option>720p</option><option>1080p</option></select>
+              <button class="sw-gen-btn">Gerar vídeo</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANALISE -->
+    <div class="screen" id="s-analise">
+      <div class="analise-page">
+        <div class="analise-body">
+          <div class="upload-zone"><div style="font-size:32px;">📷</div><div style="font-size:12px;color:#555;text-align:center;">Arraste uma imagem aqui<br>ou clique para escolher</div></div>
+          <div class="json-panel"><span class="jk">"scene"</span>: <span class="js">"indoor portrait studio"</span>,<br><span class="jk">"lighting"</span>: <span class="js">"soft natural, diffused"</span>,<br><span class="jk">"subject"</span>: {<br>&nbsp;&nbsp;<span class="jk">"gender"</span>: <span class="js">"female"</span>,<br>&nbsp;&nbsp;<span class="jk">"age_range"</span>: <span class="js">"25-32"</span>,<br>&nbsp;&nbsp;<span class="jk">"expression"</span>: <span class="js">"natural, confident"</span><br>},<br><span class="jk">"colors"</span>: [<span class="js">"ivory"</span>, <span class="js">"warm beige"</span>],<br><span class="jk">"background"</span>: <span class="js">"white seamless"</span>,<br><span class="jk">"camera"</span>: {<br>&nbsp;&nbsp;<span class="jk">"angle"</span>: <span class="js">"eye level"</span>,<br>&nbsp;&nbsp;<span class="jk">"dof"</span>: <span class="js">"shallow"</span>,<br>&nbsp;&nbsp;<span class="jk">"lens"</span>: <span class="js">"85mm portrait"</span><br>}</div>
+        </div>
+        <div class="analise-footer">
+          <div class="psug-label">Prompt sugerido com base na análise</div>
+          <div class="prompt-sug">Portrait of a woman, soft natural lighting, white seamless background, warm skin tones, shallow depth of field, 85mm lens, editorial style, 4K ultra realistic</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IA CHAT -->
+    <div class="screen" id="s-ia-chat">
+      <div class="chat-page">
+        <div class="chat-hdr"><div style="font-size:13px;font-weight:500;color:#ddd;font-family:'Syne',sans-serif;">IA de criação de prompts</div><div style="font-size:11px;color:#555;margin-top:3px;">Envie uma imagem + descreva o vídeo → receba o prompt pronto</div></div>
+        <div class="chat-msgs">
+          <div class="msg-ai"><div class="ai-av">IA</div><div class="bubble bubble-ai">Olá! Envie uma imagem de referência e me conte o que quer no vídeo. Vou criar o prompt perfeito para Kling ou RunwayML. 🎬</div></div>
+          <div class="msg-user"><div class="bubble bubble-user">Quero minha avatar andando numa praia ao pôr do sol, câmera lenta</div></div>
+          <div class="msg-ai"><div class="ai-av">IA</div><div><div class="bubble bubble-ai">Perfeito! Aqui está seu prompt otimizado para Kling:</div><div class="result-box">A young woman walking slowly on a golden beach at sunset, warm amber and orange tones, slow motion 0.5x, cinematic wide angle, shallow depth of field, ocean waves gently crashing, hair flowing in the breeze, soft backlit glow --ar 9:16</div></div></div>
+        </div>
+        <div class="chat-input-area">
+          <div class="chat-row"><input class="chat-inp" placeholder="Descreva o que você quer no vídeo..."/><button class="chat-send">Enviar</button></div>
+          <div class="chat-hint">+ Adicionar imagem de referência (opcional)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROMPTS -->
+    <div class="screen" id="s-prompts-lib">
+      <div class="prompts-page">
+        <div class="pfilters">
+          <div class="pfil active">Todos</div><div class="pfil">Fotos</div><div class="pfil">UGC</div><div class="pfil">Vídeo</div><div class="pfil">Face Swap</div><div class="pfil">Lookalike</div>
+        </div>
+        <div class="pgrid">
+          <div class="pcard"><div class="ptag">Realismo</div><div class="ptitle">Retrato feminino hiper-realista</div><div class="pdesc">Pele ultra-detalhada, iluminação natural e expressão autêntica.</div><button class="pcopy" onclick="navigator.clipboard.writeText('Ultra realistic female portrait, natural skin texture, soft diffused lighting, authentic expression, 85mm lens, shallow depth of field, 4K');this.textContent='Copiado ✓';setTimeout(()=>this.textContent='Copiar',2000)">Copiar</button></div>
+          <div class="pcard"><div class="ptag">UGC</div><div class="ptitle">UGC — Segurando produto</div><div class="pdesc">Modelo segurando produto de forma natural para stories.</div><button class="pcopy" onclick="navigator.clipboard.writeText('Woman holding product naturally, UGC style, authentic expression, soft natural lighting, vertical format, lifestyle background');this.textContent='Copiado ✓';setTimeout(()=>this.textContent='Copiar',2000)">Copiar</button></div>
+          <div class="pcard"><div class="ptag">Vídeo</div><div class="ptitle">Control motion — dramático</div><div class="pdesc">Movimento cinematográfico com atmosfera premium.</div><button class="pcopy" onclick="navigator.clipboard.writeText('Cinematic camera movement, slow dolly in, dramatic lighting, shallow depth of field, golden hour, premium atmosphere --ar 9:16');this.textContent='Copiado ✓';setTimeout(()=>this.textContent='Copiar',2000)">Copiar</button></div>
+          <div class="pcard"><div class="ptag">Lookalike</div><div class="ptitle">Criar influenciadora lookalike</div><div class="pdesc">Avatar baseado em referência sem copiar identidade.</div><button class="pcopy" onclick="navigator.clipboard.writeText('Beautiful woman, similar style to reference, professional photography, natural lighting, authentic expression, editorial quality');this.textContent='Copiado ✓';setTimeout(()=>this.textContent='Copiar',2000)">Copiar</button></div>
+          <div class="pcard"><div class="ptag">Face Swap</div><div class="ptitle">Face Swap — editorial</div><div class="pdesc">Troca de rosto em editorial com qualidade máxima.</div><button class="pcopy" onclick="navigator.clipboard.writeText('High quality face swap, seamless blending, consistent lighting, natural skin tones, editorial photography style');this.textContent='Copiado ✓';setTimeout(()=>this.textContent='Copiar',2000)">Copiar</button></div>
+          <div class="pcard"><div class="ptag">UGC</div><div class="ptitle">UGC — Unboxing natural</div><div class="pdesc">Cena de unboxing com iluminação ambiente real.</div><button class="pcopy" onclick="navigator.clipboard.writeText('Natural unboxing scene, authentic reaction, warm ambient lighting, handheld camera style, real home environment, UGC aesthetic');this.textContent='Copiado ✓';setTimeout(()=>this.textContent='Copiar',2000)">Copiar</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AULAS -->
+    <div class="screen" id="s-aulas">
+      <div class="aulas-page">
+        <div class="agrid">
+          <div class="acard"><div class="acard-thumb" style="background:#1e0a14;">▷</div><div class="acard-body"><div class="alevel" style="color:var(--pink);">INICIANTE</div><div class="atitle">Como criar seu primeiro avatar</div><div class="ameta">18 min · 5 aulas</div></div></div>
+          <div class="acard"><div class="acard-thumb" style="background:#0f1e14;">▷</div><div class="acard-body"><div class="alevel" style="color:#6ee7b7;">INTERMEDIÁRIO</div><div class="atitle">Prompts para vídeo — guia completo</div><div class="ameta">32 min · 8 aulas</div></div></div>
+          <div class="acard"><div class="acard-thumb" style="background:#1e0f0f;">▷</div><div class="acard-body"><div class="alevel" style="color:#fca5a5;">AVANÇADO</div><div class="atitle">Face Swap e troca de fundo</div><div class="ameta">24 min · 6 aulas</div></div></div>
+          <div class="acard"><div class="acard-thumb" style="background:#141e0f;">▷</div><div class="acard-body"><div class="alevel" style="color:#86efac;">WORKFLOW</div><div class="atitle">Do prompt ao vídeo — fluxo completo</div><div class="ameta">41 min · 10 aulas</div></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function nav(id, el) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.ntab, .nmenu-btn').forEach(b => b.classList.remove('active'));
+      const screen = document.getElementById('s-' + id);
+      if (screen) screen.classList.add('active');
+      if (el) el.classList.add('active');
+    }
+    function toggleMenu(id) {
+      const m = document.getElementById(id);
+      const isOpen = m.classList.contains('open');
+      closeMenus();
+      if (!isOpen) m.classList.add('open');
+    }
+    function closeMenus() {
+      document.querySelectorAll('.nmenu').forEach(m => m.classList.remove('open'));
+    }
+    document.addEventListener('click', e => { if (!e.target.closest('.nmenu')) closeMenus(); });
+    document.querySelectorAll('.ratio-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.closest('.panel-controls').querySelectorAll('.ratio-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+    document.querySelectorAll('.ptab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        tab.closest('.panel-tabs').querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+    document.querySelectorAll('.pfil').forEach(fil => {
+      fil.addEventListener('click', () => {
+        fil.closest('.pfilters').querySelectorAll('.pfil').forEach(f => f.classList.remove('active'));
+        fil.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
