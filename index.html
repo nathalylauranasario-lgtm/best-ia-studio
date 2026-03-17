@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Best IA Academy</title>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
       --pink: #e91e8c;
       --pink-dim: #e91e8c22;
@@ -19,231 +19,62 @@
       --text: #f0f0f0;
       --muted: #666;
     }
-
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    /* fundo com partículas/glow */
-    .bg-glow {
-      position: fixed; inset: 0; z-index: 0; pointer-events: none;
-      background:
-        radial-gradient(ellipse 60% 50% at 20% 50%, #e91e8c0d 0%, transparent 70%),
-        radial-gradient(ellipse 40% 60% at 80% 20%, #e91e8c08 0%, transparent 60%);
-    }
-    .bg-grid {
-      position: fixed; inset: 0; z-index: 0; pointer-events: none;
-      background-image:
-        linear-gradient(#e91e8c08 1px, transparent 1px),
-        linear-gradient(90deg, #e91e8c08 1px, transparent 1px);
-      background-size: 40px 40px;
-      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
-    }
-
-    /* layout dois lados */
-    .login-wrap {
-      position: relative; z-index: 1;
-      display: flex;
-      width: min(900px, 95vw);
-      min-height: 520px;
-      border-radius: 20px;
-      overflow: hidden;
-      border: 1px solid var(--pink-border);
-      box-shadow: 0 0 60px #e91e8c18, 0 0 120px #e91e8c08;
-      animation: fadeUp 0.6s ease both;
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* lado esquerdo — branding */
-    .login-brand {
-      flex: 1;
-      background: linear-gradient(140deg, #1a0a10 0%, #0d0d0d 60%, #0a0a14 100%);
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: space-between;
-      padding: 40px;
-      border-right: 1px solid var(--pink-border);
-      position: relative;
-      overflow: hidden;
-    }
-    .brand-glow {
-      position: absolute; bottom: -60px; left: -60px;
-      width: 280px; height: 280px;
-      background: radial-gradient(circle, #e91e8c22, transparent 70%);
-      pointer-events: none;
-    }
-    .brand-logo {
-      display: flex; align-items: center; gap: 10px;
-    }
-    .brand-hex {
-      width: 36px; height: 36px;
-      background: var(--pink-dim);
-      border: 1.5px solid var(--pink-border);
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px;
-    }
-    .brand-name {
-      font-family: 'Syne', sans-serif;
-      font-size: 16px; font-weight: 700;
-      color: #fff; letter-spacing: 0.5px;
-    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .bg-glow { position: fixed; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(ellipse 60% 50% at 20% 50%, #e91e8c0d 0%, transparent 70%), radial-gradient(ellipse 40% 60% at 80% 20%, #e91e8c08 0%, transparent 60%); }
+    .bg-grid { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-image: linear-gradient(#e91e8c08 1px, transparent 1px), linear-gradient(90deg, #e91e8c08 1px, transparent 1px); background-size: 40px 40px; mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent); }
+    .login-wrap { position: relative; z-index: 1; display: flex; width: min(900px, 95vw); min-height: 520px; border-radius: 20px; overflow: hidden; border: 1px solid var(--pink-border); box-shadow: 0 0 60px #e91e8c18, 0 0 120px #e91e8c08; animation: fadeUp 0.6s ease both; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+    .login-brand { flex: 1; background: linear-gradient(140deg, #1a0a10 0%, #0d0d0d 60%, #0a0a14 100%); display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; padding: 40px; border-right: 1px solid var(--pink-border); position: relative; overflow: hidden; }
+    .brand-glow { position: absolute; bottom: -60px; left: -60px; width: 280px; height: 280px; background: radial-gradient(circle, #e91e8c22, transparent 70%); pointer-events: none; }
+    .brand-logo { display: flex; align-items: center; gap: 10px; }
+    .brand-hex { width: 36px; height: 36px; background: var(--pink-dim); border: 1.5px solid var(--pink-border); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+    .brand-name { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; color: #fff; letter-spacing: 0.5px; }
     .brand-name span { color: var(--pink); }
-
-    .brand-copy {
-      position: relative; z-index: 1;
-    }
-    .brand-tag {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-size: 11px; background: var(--pink-dim);
-      color: var(--pink); padding: 4px 12px; border-radius: 20px;
-      border: 1px solid var(--pink-border); margin-bottom: 16px; font-weight: 500;
-    }
-    .brand-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 28px; font-weight: 700;
-      color: #fff; line-height: 1.2; margin-bottom: 12px;
-      letter-spacing: -0.5px;
-    }
+    .brand-copy { position: relative; z-index: 1; }
+    .brand-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; background: var(--pink-dim); color: var(--pink); padding: 4px 12px; border-radius: 20px; border: 1px solid var(--pink-border); margin-bottom: 16px; font-weight: 500; }
+    .brand-title { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 700; color: #fff; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.5px; }
     .brand-title span { color: var(--pink); }
-    .brand-desc {
-      font-size: 13px; color: var(--muted); line-height: 1.6; max-width: 240px;
-    }
-
-    .brand-features {
-      display: flex; flex-direction: column; gap: 8px;
-    }
-    .feat {
-      display: flex; align-items: center; gap: 8px;
-      font-size: 12px; color: #888;
-    }
-    .feat-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--pink); flex-shrink: 0;
-      box-shadow: 0 0 6px var(--pink);
-    }
-
-    /* lado direito — formulário */
-    .login-form {
-      width: 380px;
-      background: var(--surface);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 48px 40px;
-    }
-    .form-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 22px; font-weight: 700;
-      color: #fff; margin-bottom: 4px; letter-spacing: -0.3px;
-    }
-    .form-sub {
-      font-size: 13px; color: var(--muted); margin-bottom: 32px;
-    }
-
-    .field { margin-bottom: 16px; }
-    .field label {
-      display: block; font-size: 11px; font-weight: 500;
-      color: #888; margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase;
-    }
-    .field input {
-      width: 100%; padding: 11px 14px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      font-size: 13px; color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
+    .brand-desc { font-size: 13px; color: var(--muted); line-height: 1.6; max-width: 240px; }
+    .brand-features { display: flex; flex-direction: column; gap: 8px; }
+    .feat { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #888; }
+    .feat-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--pink); flex-shrink: 0; box-shadow: 0 0 6px var(--pink); }
+    .login-form { width: 380px; background: var(--surface); display: flex; flex-direction: column; justify-content: center; padding: 48px 40px; }
+    .form-title { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 4px; letter-spacing: -0.3px; }
+    .form-sub { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+    .tabs { display: flex; gap: 4px; margin-bottom: 24px; background: var(--surface2); border-radius: 10px; padding: 4px; }
+    .tab { flex: 1; padding: 8px; border-radius: 8px; font-size: 13px; cursor: pointer; color: #666; background: none; border: none; font-family: 'DM Sans', sans-serif; transition: all 0.15s; text-align: center; }
+    .tab.active { background: var(--pink); color: #fff; font-weight: 500; }
+    .field { margin-bottom: 14px; }
+    .field label { display: block; font-size: 11px; font-weight: 500; color: #888; margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase; }
+    .field input { width: 100%; padding: 11px 14px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; font-size: 13px; color: var(--text); font-family: 'DM Sans', sans-serif; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
     .field input::placeholder { color: #444; }
-    .field input:focus {
-      border-color: var(--pink-border);
-      box-shadow: 0 0 0 3px #e91e8c12;
-    }
-
-    .form-options {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 24px;
-    }
-    .remember {
-      display: flex; align-items: center; gap: 6px;
-      font-size: 12px; color: var(--muted); cursor: pointer;
-    }
+    .field input:focus { border-color: var(--pink-border); box-shadow: 0 0 0 3px #e91e8c12; }
+    .form-options { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .remember { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); cursor: pointer; }
     .remember input[type=checkbox] { accent-color: var(--pink); }
-    .forgot { font-size: 12px; color: var(--pink); cursor: pointer; text-decoration: none; }
+    .forgot { font-size: 12px; color: var(--pink); cursor: pointer; text-decoration: none; background: none; border: none; font-family: 'DM Sans', sans-serif; }
     .forgot:hover { text-decoration: underline; }
-
-    .btn-login {
-      width: 100%; padding: 13px;
-      background: var(--pink);
-      color: #fff; border: none;
-      border-radius: 10px;
-      font-size: 14px; font-weight: 500;
-      font-family: 'DM Sans', sans-serif;
-      cursor: pointer;
-      transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
-      margin-bottom: 20px;
-      letter-spacing: 0.3px;
-    }
-    .btn-login:hover {
-      background: #c4186e;
-      box-shadow: 0 0 20px #e91e8c55;
-    }
-    .btn-login:active { transform: scale(0.98); }
-
-    .divider {
-      display: flex; align-items: center; gap: 12px;
-      font-size: 11px; color: #333; margin-bottom: 20px;
-    }
-    .divider::before, .divider::after {
-      content: ''; flex: 1; height: 1px; background: var(--border);
-    }
-
-    .btn-google {
-      width: 100%; padding: 11px;
-      background: var(--surface2);
-      color: #ccc; border: 1px solid var(--border);
-      border-radius: 10px;
-      font-size: 13px; font-weight: 400;
-      font-family: 'DM Sans', sans-serif;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      transition: border-color 0.2s, background 0.2s;
-      margin-bottom: 28px;
-    }
+    .btn-main { width: 100%; padding: 13px; background: var(--pink); color: #fff; border: none; border-radius: 10px; font-size: 14px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: background 0.2s, box-shadow 0.2s, transform 0.1s; margin-bottom: 16px; }
+    .btn-main:hover { background: #c4186e; box-shadow: 0 0 20px #e91e8c55; }
+    .btn-main:active { transform: scale(0.98); }
+    .btn-main:disabled { opacity: 0.6; cursor: not-allowed; }
+    .divider { display: flex; align-items: center; gap: 12px; font-size: 11px; color: #333; margin-bottom: 16px; }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .btn-google { width: 100%; padding: 11px; background: var(--surface2); color: #ccc; border: 1px solid var(--border); border-radius: 10px; font-size: 13px; font-family: 'DM Sans', sans-serif; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: border-color 0.2s, background 0.2s; margin-bottom: 24px; }
     .btn-google:hover { border-color: var(--pink-border); background: var(--pink-dim); }
-
-    .form-footer {
-      text-align: center; font-size: 12px; color: var(--muted);
-    }
-    .form-footer a { color: var(--pink); text-decoration: none; }
+    .form-footer { text-align: center; font-size: 12px; color: var(--muted); }
+    .form-footer a { color: var(--pink); text-decoration: none; cursor: pointer; }
     .form-footer a:hover { text-decoration: underline; }
-
-    @media (max-width: 640px) {
-      .login-brand { display: none; }
-      .login-form { width: 100%; padding: 40px 28px; }
-    }
+    .msg { padding: 10px 14px; border-radius: 8px; font-size: 12px; margin-bottom: 14px; display: none; }
+    .msg.error { background: #1e0a0a; border: 1px solid #8b2222; color: #fca5a5; display: block; }
+    .msg.success { background: #0a1e0a; border: 1px solid #228b22; color: #86efac; display: block; }
+    @media (max-width: 640px) { .login-brand { display: none; } .login-form { width: 100%; padding: 40px 28px; } }
   </style>
 </head>
 <body>
   <div class="bg-glow"></div>
   <div class="bg-grid"></div>
-
   <div class="login-wrap">
-    <!-- lado esquerdo -->
     <div class="login-brand">
       <div class="brand-glow"></div>
       <div class="brand-logo">
@@ -262,41 +93,122 @@
         <div class="feat"><div class="feat-dot"></div>Biblioteca com +40 prompts prontos</div>
       </div>
     </div>
-
-    <!-- lado direito -->
     <div class="login-form">
-      <div class="form-title">Bem-vinda de volta 👋</div>
-      <div class="form-sub">Entre na sua conta para continuar criando</div>
-
+      <div class="form-title" id="form-title">Bem-vinda de volta 👋</div>
+      <div class="form-sub" id="form-sub">Entre na sua conta para continuar criando</div>
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('login')">Entrar</button>
+        <button class="tab" onclick="switchTab('register')">Criar conta</button>
+      </div>
+      <div id="msg" class="msg"></div>
       <div class="field">
         <label>Email</label>
-        <input type="email" placeholder="seu@email.com" />
+        <input type="email" id="email" placeholder="seu@email.com" />
       </div>
       <div class="field">
         <label>Senha</label>
-        <input type="password" placeholder="••••••••" />
+        <input type="password" id="password" placeholder="••••••••" />
       </div>
-
-      <div class="form-options">
-        <label class="remember">
-          <input type="checkbox" /> Lembrar de mim
-        </label>
-        <a class="forgot" href="#">Esqueci a senha</a>
+      <div class="form-options" id="login-options">
+        <label class="remember"><input type="checkbox" /> Lembrar de mim</label>
+        <button class="forgot" onclick="forgotPassword()">Esqueci a senha</button>
       </div>
-
-      <button class="btn-login">Entrar na plataforma</button>
-
+      <button class="btn-main" id="btn-main" onclick="handleAuth()">Entrar na plataforma</button>
       <div class="divider">ou continue com</div>
-
-      <button class="btn-google">
+      <button class="btn-google" onclick="loginGoogle()">
         <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#EA4335" d="M5.27 9.76A7.08 7.08 0 0 1 19.07 12c0 .68-.06 1.34-.18 1.97H12v-3.72h7.6A7.1 7.1 0 0 0 5.27 9.76z"/><path fill="#34A853" d="M12 19.09a7.07 7.07 0 0 1-6.73-4.87l-3.26 2.52A11.56 11.56 0 0 0 12 23.5c2.97 0 5.69-1.07 7.77-2.83l-3.07-2.37A7.07 7.07 0 0 1 12 19.09z"/><path fill="#4A90D9" d="M19.77 16.67l3.07 2.37A11.56 11.56 0 0 0 23.5 12c0-.75-.07-1.47-.19-2.18H12v3.72h7.89a7.15 7.15 0 0 1-.12.85z"/><path fill="#FBBC05" d="M5.27 14.22A7.1 7.1 0 0 1 4.91 12c0-.77.13-1.52.36-2.24L2.02 7.24A11.56 11.56 0 0 0 .5 12c0 1.85.43 3.6 1.19 5.13l3.58-2.91z"/></svg>
         Entrar com Google
       </button>
-
-      <div class="form-footer">
-        Não tem conta? <a href="#">Criar conta grátis</a>
+      <div class="form-footer" id="form-footer">
+        Não tem conta? <a onclick="switchTab('register')">Criar conta grátis</a>
       </div>
     </div>
   </div>
+
+  <script>
+    const SUPABASE_URL = 'https://dnnnexhuddbmoulhjewz.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRubm5leGh1ZGRibW91bGhqZXd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NTgzODAsImV4cCI6MjA4OTMzNDM4MH0.RyBySIvSwy-enyUx5xNG4p8zkTcnDRo4kQksCr9fR0s';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let currentTab = 'login';
+
+    // Verifica se já tem sessão ativa
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) window.location.href = 'painel.html';
+    });
+
+    function switchTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+      const isLogin = tab === 'login';
+      document.getElementById('form-title').textContent = isLogin ? 'Bem-vinda de volta 👋' : 'Criar sua conta ✨';
+      document.getElementById('form-sub').textContent = isLogin ? 'Entre na sua conta para continuar criando' : 'Preencha os dados para começar';
+      document.getElementById('btn-main').textContent = isLogin ? 'Entrar na plataforma' : 'Criar minha conta';
+      document.getElementById('login-options').style.display = isLogin ? 'flex' : 'none';
+      document.getElementById('form-footer').innerHTML = isLogin
+        ? 'Não tem conta? <a onclick="switchTab(\'register\')">Criar conta grátis</a>'
+        : 'Já tem conta? <a onclick="switchTab(\'login\')">Entrar</a>';
+      showMsg('', '');
+    }
+
+    function showMsg(text, type) {
+      const el = document.getElementById('msg');
+      el.textContent = text;
+      el.className = 'msg' + (type ? ' ' + type : '');
+    }
+
+    async function handleAuth() {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const btn = document.getElementById('btn-main');
+
+      if (!email || !password) { showMsg('Preencha email e senha.', 'error'); return; }
+      if (password.length < 6) { showMsg('A senha deve ter pelo menos 6 caracteres.', 'error'); return; }
+
+      btn.disabled = true;
+      btn.textContent = 'Aguarde...';
+
+      if (currentTab === 'login') {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) {
+          showMsg('Email ou senha incorretos.', 'error');
+          btn.disabled = false;
+          btn.textContent = 'Entrar na plataforma';
+        } else {
+          window.location.href = 'painel.html';
+        }
+      } else {
+        const { error } = await supabase.auth.signUp({ email, password });
+        if (error) {
+          showMsg('Erro ao criar conta: ' + error.message, 'error');
+          btn.disabled = false;
+          btn.textContent = 'Criar minha conta';
+        } else {
+          showMsg('Conta criada com sucesso! Entrando...', 'success');
+          setTimeout(() => window.location.href = 'painel.html', 1500);
+        }
+      }
+    }
+
+    async function loginGoogle() {
+      await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.origin + '/painel.html' }
+      });
+    }
+
+    async function forgotPassword() {
+      const email = document.getElementById('email').value.trim();
+      if (!email) { showMsg('Digite seu email primeiro.', 'error'); return; }
+      const { error } = await supabase.auth.resetPasswordForEmail(email);
+      if (error) { showMsg('Erro ao enviar email.', 'error'); }
+      else { showMsg('Email de recuperação enviado! Verifique sua caixa de entrada.', 'success'); }
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter') handleAuth();
+    });
+  </script>
 </body>
 </html>
