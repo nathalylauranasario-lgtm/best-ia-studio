@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Best IA Academy</title>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -128,12 +128,13 @@
   <script>
     const SUPABASE_URL = 'https://dnnnexhuddbmoulhjewz.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRubm5leGh1ZGRibW91bGhqZXd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NTgzODAsImV4cCI6MjA4OTMzNDM4MH0.RyBySIvSwy-enyUx5xNG4p8zkTcnDRo4kQksCr9fR0s';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const { createClient } = supabase;
+    const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let currentTab = 'login';
 
     // Verifica se já tem sessão ativa
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    db.auth.getSession().then(({ data: { session } }) => {
       if (session) window.location.href = 'painel.html';
     });
 
@@ -170,7 +171,7 @@
       btn.textContent = 'Aguarde...';
 
       if (currentTab === 'login') {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { error } = await db.auth.signInWithPassword({ email, password });
         if (error) {
           showMsg('Email ou senha incorretos.', 'error');
           btn.disabled = false;
@@ -179,7 +180,7 @@
           window.location.href = 'painel.html';
         }
       } else {
-        const { error } = await supabase.auth.signUp({ email, password });
+        const { error } = await db.auth.signUp({ email, password });
         if (error) {
           showMsg('Erro ao criar conta: ' + error.message, 'error');
           btn.disabled = false;
@@ -192,7 +193,7 @@
     }
 
     async function loginGoogle() {
-      await supabase.auth.signInWithOAuth({
+      await db.auth.signInWithOAuth({
         provider: 'google',
         options: { redirectTo: window.location.origin + '/painel.html' }
       });
@@ -201,7 +202,7 @@
     async function forgotPassword() {
       const email = document.getElementById('email').value.trim();
       if (!email) { showMsg('Digite seu email primeiro.', 'error'); return; }
-      const { error } = await supabase.auth.resetPasswordForEmail(email);
+      const { error } = await db.auth.resetPasswordForEmail(email);
       if (error) { showMsg('Erro ao enviar email.', 'error'); }
       else { showMsg('Email de recuperação enviado! Verifique sua caixa de entrada.', 'success'); }
     }
