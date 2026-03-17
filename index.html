@@ -187,7 +187,7 @@
           btn.textContent = 'Criar minha conta';
         } else {
           showMsg('Conta criada com sucesso! Entrando...', 'success');
-          setTimeout(() => window.location.href = 'dashboard.html', 1500);
+          setTimeout(() => window.location.href = 'painel.html', 1500);
         }
       }
     }
@@ -195,7 +195,7 @@
     async function loginGoogle() {
       await db.auth.signInWithOAuth({
         provider: 'google',
-        options: { redirectTo: window.location.origin + '/dashboard.html' }
+        options: { redirectTo: window.location.origin + '/painel.html' }
       });
     }
 
