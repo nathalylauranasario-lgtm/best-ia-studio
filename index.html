@@ -135,7 +135,7 @@
 
     // Verifica se já tem sessão ativa
     db.auth.getSession().then(({ data: { session } }) => {
-      if (session) window.location.href = 'dashboard.html';
+      if (session) window.location.href = 'painel.html';
     });
 
     function switchTab(tab) {
