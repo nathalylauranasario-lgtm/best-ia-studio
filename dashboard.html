@@ -4,6 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Best IA Academy — Studio</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -228,7 +229,7 @@
     </div>
     <div class="topbar-right">
       <div class="plan-badge">PRO</div>
-      <div class="user-av">JA</div>
+      <div class="user-av" onclick="logout()" title="Sair da conta" style="cursor:pointer;">JA</div>
     </div>
   </div>
 
@@ -453,6 +454,21 @@
   </div>
 
   <script>
+    // Proteção de rota — redireciona para login se não estiver logado
+const _supabase = window.supabase.createClient(
+  'https://dnnnexhuddbmoulhjewz.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRubm5leGh1ZGRibW91bGhqZXd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NTgzODAsImV4cCI6MjA4OTMzNDM4MH0.RyBySIvSwy-enyUx5xNG4p8zkTcnDRo4kQksCr9fR0s'
+);
+_supabase.auth.getSession().then(({ data: { session } }) => {
+  if (!session) window.location.href = 'index.html';
+});
+
+// Botão de sair
+function logout() {
+  _supabase.auth.signOut().then(() => {
+    window.location.href = 'index.html';
+  });
+}
     function nav(id, el) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.ntab, .nmenu-btn').forEach(b => b.classList.remove('active'));
